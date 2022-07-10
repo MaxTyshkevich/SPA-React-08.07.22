@@ -9,3 +9,10 @@ export interface IAirport {
   type: string;
   country: string;
 }
+
+export interface ServerResponse<T> {
+  count: number;
+  next: number | null;
+  previous: number | null;
+  results: T[];
+}
