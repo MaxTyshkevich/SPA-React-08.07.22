@@ -31,4 +31,6 @@ export const airportSlice = createSlice({
   },
 });
 
+export const { fetching, fetchSucces, fetchError } = airportSlice.actions;
+
 export default airportSlice.reducer;
