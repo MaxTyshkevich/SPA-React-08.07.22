@@ -51,11 +51,16 @@ const MainPage = () => {
         nextLabel=">"
         onPageChange={pageChangeHandler}
         containerClassName={styles.pagination}
-        pageRangeDisplayed={5}
+        pageRangeDisplayed={3}
+        marginPagesDisplayed={1}
         pageCount={pageCount}
         previousLabel="<"
         renderOnZeroPageCount={() => null}
         activeClassName={styles.active}
+        nextClassName={styles.previous}
+        previousClassName={styles.next}
+        disabledClassName={styles.disabled}
+        pageLinkClassName={styles.link}
       />
     </div>
   );
