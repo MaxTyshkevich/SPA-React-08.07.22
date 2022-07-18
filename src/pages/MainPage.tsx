@@ -20,8 +20,6 @@ const MainPage = () => {
   const [pageCount, setPageCount] = useState(0);
   const [page, setPage] = useState(1);
 
-  console.log(`pageCount: `, pageCount);
-
   const pageChangeHandler = ({ selected }: { selected: number }) => {
     console.log(selected);
     setPage(selected + 1);
