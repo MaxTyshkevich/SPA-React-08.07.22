@@ -1,21 +1,25 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const useOpenSearch = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const input = useRef<HTMLInputElement>();
 
-  const onFocus = () => {
-    setIsOpen(true);
-  };
-
-  const onBlur = () => {
+  const onClick = (event: MouseEvent) => {
+    if (!isOpen && event.target === input.current) {
+      return setIsOpen(true);
+    }
     setIsOpen(false);
   };
 
+  useEffect(() => {
+    window.addEventListener("click", onClick);
+    return () => {
+      window.removeEventListener("click", onClick);
+    };
+  }, []);
+
   return {
     isOpen,
-    handler: {
-      onFocus,
-      onBlur,
-    },
+    ref: input as React.MutableRefObject<HTMLInputElement>,
   };
 };

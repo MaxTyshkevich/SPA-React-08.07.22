@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { IConfigFliter } from "../../components/AirportFilter";
 import { IAirport } from "../../models/models";
 
 interface AirportState {
@@ -6,6 +7,7 @@ interface AirportState {
   error: string;
   count: number;
   airports: IAirport[];
+  showAirports: IAirport[];
 }
 
 export interface AirportPayload {
@@ -18,6 +20,7 @@ const initialState: AirportState = {
   error: "",
   count: 0,
   airports: [],
+  showAirports: [],
 };
 
 export const airportSlice = createSlice({
@@ -38,9 +41,20 @@ export const airportSlice = createSlice({
       state.error = action.payload.message;
       state.count = 0;
     },
+    filter: (state, action: PayloadAction<IConfigFliter>) => {
+      const config = action.payload;
+
+      state.showAirports = state.airports.filter(
+        (a) =>
+          a.country === config.country ||
+          a.region === config.region ||
+          a.type === config.type
+      );
+    },
   },
 });
 
-export const { fetching, fetchSucces, fetchError } = airportSlice.actions;
+export const { fetching, fetchSucces, fetchError, filter } =
+  airportSlice.actions;
 
 export default airportSlice.reducer;
