@@ -1,6 +1,8 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
+import axios from "../../axios";
 import { IConfigFliter } from "../../components/AirportFilter";
-import { IAirport } from "../../models/models";
+import { IAirport, IAirportDetail } from "../../models/models";
 
 interface AirportState {
   loading: boolean;
@@ -22,6 +24,22 @@ const initialState: AirportState = {
   airports: [],
   showAirports: [],
 };
+
+export const getAirport = createAsyncThunk<IAirportDetail, string>(
+  "airport/getAirport",
+  async (id) => {
+    try {
+      const response = await axios.get(`airports/${id}`);
+
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.log(`AxiosError: `, error.message);
+      }
+      console.log(`error: `, error);
+    }
+  }
+);
 
 export const airportSlice = createSlice({
   name: "airport",
@@ -56,6 +74,14 @@ export const airportSlice = createSlice({
         );
       }
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(getAirport.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getAirport.fulfilled, (state) => {
+      state.loading = false;
+    });
   },
 });
 

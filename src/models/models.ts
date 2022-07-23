@@ -26,6 +26,20 @@ export interface IHandbook {
   type: string;
   country: string;
 }
+export interface IAirportDetail {
+  ident: string;
+  local_code: string;
+  name: string;
+  coordinates: string;
+  elevation_ft: string;
+  gps_code: string;
+  iata_code: string;
+  continent: string;
+  type: string;
+  country: string;
+  region: string;
+  municipality: string;
+}
 
 export type IAirportType = string;
 export type IAirportRegion = string;

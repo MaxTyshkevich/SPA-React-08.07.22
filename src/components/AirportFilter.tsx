@@ -33,24 +33,12 @@ const SelectFilter = ({
     <div>
       {name}:
       <select name={name} value={configFilter[name]} onChange={handleChange}>
-        {elems.map((el, index) => {
-          if (index === 0) {
-            return (
-              <>
-                <option value="">All</option>
-                <option key={el} value={el}>
-                  {el}
-                </option>
-              </>
-            );
-          }
-
-          return (
-            <option key={el} value={el}>
-              {el}
-            </option>
-          );
-        })}
+        <option value="">All</option>
+        {elems.map((el) => (
+          <option key={el} value={el}>
+            {el}
+          </option>
+        ))}
       </select>
     </div>
   ) : null;
