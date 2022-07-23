@@ -1,4 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AxiosError, AxiosResponse } from "axios";
 import axios from "../../axios";
 import {
   IAirport,
@@ -6,6 +7,7 @@ import {
   IAirportRegion,
   IAirportType,
 } from "../../models/models";
+import airportSlice, { filter } from "./airportSlice";
 
 enum PathHandbook {
   types = `/handbooks/airport-types`,
@@ -19,6 +21,8 @@ interface IHandbookState {
   regions: IAirportRegion[];
   contries: IAirportCountry[];
 }
+
+type Filter = IAirportType[] | IAirportRegion[] | IAirportCountry[];
 
 export interface AirportPayload {
   count: number;
@@ -34,12 +38,17 @@ const initialState: IHandbookState = {
 
 export const getHandBooks = createAsyncThunk(
   "handbook/getHandBooks",
-  async () => {
-    const responses = await Promise.all(
-      Object.values(PathHandbook).map((path) => axios.get(path))
-    );
-    const results = responses.map((response) => response.data);
-    return results;
+  async (_, thinkAPI) => {
+    try {
+      const responses = await Promise.all(
+        Object.values(PathHandbook).map((path: string) => axios.get(path))
+      );
+      console.log(`test::: `, responses);
+      const results = responses.map((response) => response.data);
+      return results as Filter[];
+    } catch (e) {
+      return thinkAPI.rejectWithValue("Some thing went wrong");
+    }
   }
 );
 
@@ -48,11 +57,20 @@ export const handbookSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getHandBooks.fulfilled, (state, action) => {
+    builder.addCase(
+      getHandBooks.fulfilled,
+      (state, action: PayloadAction<Filter[]>) => {
+        state.loading = false;
+        state.types = action.payload[0];
+        state.regions = action.payload[1];
+        state.contries = action.payload[2];
+      }
+    );
+    builder.addCase(getHandBooks.rejected, (state, action) => {
       state.loading = false;
-      state.types = action.payload[0];
-      state.regions = action.payload[1];
-      state.contries = action.payload[2];
+      state.types = [];
+      state.regions = [];
+      state.contries = [];
     });
   },
 });

@@ -29,17 +29,31 @@ const SelectFilter = ({
     setConfigFilter(newFilter);
   };
 
-  return (
+  return !!elems.length ? (
     <div>
+      {name}:
       <select name={name} value={configFilter[name]} onChange={handleChange}>
-        {elems.map((el) => (
-          <option key={el} value={el}>
-            {el}
-          </option>
-        ))}
+        {elems.map((el, index) => {
+          if (index === 0) {
+            return (
+              <>
+                <option value="">All</option>
+                <option key={el} value={el}>
+                  {el}
+                </option>
+              </>
+            );
+          }
+
+          return (
+            <option key={el} value={el}>
+              {el}
+            </option>
+          );
+        })}
       </select>
     </div>
-  );
+  ) : null;
 };
 
 export const AirportFilter = () => {
@@ -56,27 +70,26 @@ export const AirportFilter = () => {
 
   useEffect(() => {
     dispatch(filter(configFilter));
-  }, [configFilter]);
+  }, [configFilter, dispatch]);
 
   return (
     <div>
       <h3>AirportFilter:</h3>
-      <div className="flex gap-2">
-        types :{" "}
+      <div className="flex gap-x-9 ">
         <SelectFilter
           elems={types}
           name={"type"}
           configFilter={configFilter}
           setConfigFilter={setConfigFilter}
         />
-        regions :{" "}
+
         <SelectFilter
           elems={regions}
           name={"region"}
           configFilter={configFilter}
           setConfigFilter={setConfigFilter}
         />
-        contries :
+
         <SelectFilter
           elems={contries}
           name={"country"}

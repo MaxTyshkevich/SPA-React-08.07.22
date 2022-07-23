@@ -4,11 +4,12 @@ import styles from "./MainPage.module.scss";
 import ReactPaginate from "react-paginate";
 
 import { AirportCard } from "../components/AirportCard";
-import { AirportFilter } from "../components/AirportFilter";
+import { AirportFilter, IConfigFliter } from "../components/AirportFilter";
 import { AirportSearch } from "../components/AirportSearch";
 import { useAppDispatch, useAppSelector } from "../hook/redux";
 import { fetchAirport } from "../store/actions/actionsAction";
 import { getHandBooks } from "../store/slices/handbookSlice";
+import { filter } from "../store/slices/airportSlice";
 
 const ITEMS_PER_PAGE = 50;
 
@@ -27,12 +28,12 @@ const MainPage = () => {
   };
 
   useEffect(() => {
-    dispath(getHandBooks());
-  }, []);
-
-  useEffect(() => {
     dispath(fetchAirport(page, ITEMS_PER_PAGE));
   }, [dispath, page]);
+
+  useEffect(() => {
+    dispath(getHandBooks());
+  }, [dispath]);
 
   useEffect(() => {
     setPageCount(Math.ceil(count / ITEMS_PER_PAGE));
@@ -46,7 +47,7 @@ const MainPage = () => {
       {loading && <p className="text-center text-lg">Loading...</p>}
       {error && <p className="text-center text-lg text-red-600">{error}</p>}
 
-      {showAirports.length && (
+      {!!showAirports.length && (
         <div>
           {showAirports.map((airport) => (
             <AirportCard key={airport.id} airport={airport} />

@@ -34,6 +34,7 @@ export const airportSlice = createSlice({
       state.loading = false;
       state.count = action.payload.count;
       state.airports = action.payload.airports;
+      state.showAirports = action.payload.airports;
       state.error = "";
     },
     fetchError: (state, action: PayloadAction<Error>) => {
@@ -44,12 +45,16 @@ export const airportSlice = createSlice({
     filter: (state, action: PayloadAction<IConfigFliter>) => {
       const config = action.payload;
 
-      state.showAirports = state.airports.filter(
-        (a) =>
-          a.country === config.country ||
-          a.region === config.region ||
-          a.type === config.type
-      );
+      if (config.country === "" && config.region === "" && config.type === "") {
+        state.showAirports = [...state.airports];
+      } else {
+        state.showAirports = state.airports.filter(
+          (a) =>
+            a.country === config.country ||
+            a.region === config.region ||
+            a.type === config.type
+        );
+      }
     },
   },
 });
